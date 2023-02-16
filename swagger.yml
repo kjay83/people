@@ -4,7 +4,7 @@ openapi: 3.0.0
 info:
   title: "RP Flask REST API"
   description: "An API about people and notes"
-  version: "1.0.0"
+  version: "2.0.0"
 
 servers:
     - url: "/api"
@@ -20,6 +20,16 @@ components:
           type: "string"
         lname:
           type: "string"
+    Note:
+      type: "object"
+      required:
+        #a note cannot exist without a person
+        - person_id
+      properties:
+        content:
+          type: "string"
+        person_id:
+          type: "integer"
   parameters:
     lname:
       name: "lname"
@@ -28,6 +38,13 @@ components:
       required: True
       schema:
         type: "string"
+    noteid:
+      name: "noteid"
+      description: "id of the note to get"
+      in: path
+      required: True
+      schema:
+        type: "integer"
 
 paths:
   /people:
@@ -92,3 +109,23 @@ paths:
       responses:
         "204":
           description: "Successfully deleted person"
+  /notes:
+    get:
+      operationId: "notes.read_all"
+      tags:
+        - "Note"
+      summary: "Read the list of note"
+      responses:
+        "200":
+          description: "Successfully read note list"
+  /notes/{noteid}:
+    get:
+      operationId: "notes.read_one"
+      tags: 
+        - Note
+      summary: "Read one note"
+      parameters:
+        - $ref: "#/components/parameters/noteid"
+      responses:
+        "200":
+          description: "Successfully read note" 
