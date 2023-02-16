@@ -23,8 +23,9 @@ components:
     Note:
       type: "object"
       required:
-        #a note cannot exist without a person
+        #a note cannot exist without a person nor a content
         - person_id
+        - content
       properties:
         content:
           type: "string"
@@ -118,6 +119,28 @@ paths:
       responses:
         "200":
           description: "Successfully read note list"
+    post:
+      operationId: "notes.create"
+      tags:
+        - "Note"
+      summary: "Create a note associated with a person"
+      requestBody:
+          description: "Note to create"
+          required: True
+          content:
+            application/json:
+              schema:
+                x-body-name: "note"
+                $ref: "#/components/schemas/Note"
+                # type: "object"
+                # properties:
+                #   person_id:
+                #     type: "integer"
+                #   content:
+                #     type: "string"
+      responses:
+        "201":
+          description: "Successfully created a note"
   /notes/{noteid}:
     get:
       operationId: "notes.read_one"
@@ -129,3 +152,29 @@ paths:
       responses:
         "200":
           description: "Successfully read note" 
+    put:
+      operationId: "notes.update"
+      tags: 
+        - Note
+      summary: "Update one note"
+      parameters:
+        - $ref: "#/components/parameters/noteid"
+      responses:
+        "200":
+          description: "Successfully updated a note"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-body-name: "note"
+              $ref: "#/components/schemas/Note"
+    delete:
+      tags:
+        - Note
+      operationId: "notes.delete"
+      summary: "Delete a note"
+      parameters:
+        - $ref: "#/components/parameters/noteid"
+      responses:
+        "204":
+          description: "Successfully deleted note"
